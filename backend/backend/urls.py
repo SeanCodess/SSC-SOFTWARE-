@@ -20,20 +20,24 @@ def get_csrf_token(request):
 
 @login_required
 def get_user_info(request):
+    # Add authentication check
+    if not request.user.is_authenticated:
+        return JsonResponse({'error': 'Not authenticated'}, status=401)
     return JsonResponse({
         'username': request.user.username,
         'email': request.user.email
     })
 
 router = routers.DefaultRouter()
-router.register(r'events',   EventViewSet)
-router.register(r'tasks',    TaskViewSet)
-router.register(r'messages', MessageViewSet)
+router.register(r'events', EventViewSet, basename='event')
+router.register(r'tasks', TaskViewSet, basename='task')
+router.register(r'messages', MessageViewSet, basename='message')
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('api/',    include(router.urls)),
+    path('api/', include(router.urls)),
     path('api/csrf/', get_csrf_token),
+    # Move api-auth to before other patterns to ensure login is handled first
     path('api-auth/', include('rest_framework.urls', namespace='rest_framework')),
     path('api-auth/user/', get_user_info),
 ]

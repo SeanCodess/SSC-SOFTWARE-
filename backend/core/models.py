@@ -37,7 +37,7 @@ class Task(models.Model):
 
 
 class Message(models.Model):
-    room_name = models.CharField(max_length=50)  # e.g. "general" or an Event ID
+    room_name = models.CharField(max_length=50, default='general')  # Make 'general' the default
     user      = models.ForeignKey(User, on_delete=models.CASCADE)
     content   = models.TextField()
     timestamp = models.DateTimeField(auto_now_add=True)

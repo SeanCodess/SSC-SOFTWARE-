@@ -57,3 +57,8 @@ class MessageSerializer(serializers.ModelSerializer):
             'timestamp',
         ]
         read_only_fields = ['user', 'timestamp']
+
+    def validate_room_name(self, value):
+        if not value:
+            return 'general'
+        return value

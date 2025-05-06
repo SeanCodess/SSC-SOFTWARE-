@@ -2,7 +2,8 @@ from datetime import timedelta
 import logging
 
 from django.utils import timezone
-from rest_framework import viewsets
+from django.db.models import Q  # Add this import
+from rest_framework import viewsets, filters
 from rest_framework.permissions import IsAuthenticated
 
 from .models import Event, Task, Message
@@ -13,9 +14,18 @@ from .tasks import send_event_reminder, send_task_reminder
 logger = logging.getLogger('django')
 
 class EventViewSet(viewsets.ModelViewSet):
-    queryset = Event.objects.all().order_by('start')
     serializer_class = EventSerializer
     permission_classes = [IsAuthenticated]
+    filter_backends = [filters.OrderingFilter]
+    ordering_fields = ['start', 'end']
+    ordering = ['start']
+
+    def get_queryset(self):
+        # Show events where user is organizer or has related tasks
+        return Event.objects.filter(
+            Q(organizer=self.request.user) |  # Remove models. prefix
+            Q(tasks__user=self.request.user)  # Remove models. prefix
+        ).distinct()
 
     def list(self, request, *args, **kwargs):
         logger.debug(
@@ -40,9 +50,15 @@ class EventViewSet(viewsets.ModelViewSet):
             )
 
 class TaskViewSet(viewsets.ModelViewSet):
-    queryset = Task.objects.all().order_by('due_date')
     serializer_class = TaskSerializer
     permission_classes = [IsAuthenticated]
+    filter_backends = [filters.OrderingFilter]
+    ordering_fields = ['due_date']
+    ordering = ['due_date']
+
+    def get_queryset(self):
+        # Only show tasks assigned to the current user
+        return Task.objects.filter(user=self.request.user)
 
     def list(self, request, *args, **kwargs):
         logger.debug(
@@ -67,9 +83,18 @@ class TaskViewSet(viewsets.ModelViewSet):
             )
 
 class MessageViewSet(viewsets.ModelViewSet):
-    queryset = Message.objects.all().order_by('timestamp')
     serializer_class = MessageSerializer
     permission_classes = [IsAuthenticated]
+    filter_backends = [filters.OrderingFilter]
+    ordering = ['-timestamp']
+
+    def get_queryset(self):
+        # Filter messages by room_name if provided
+        room_name = self.request.query_params.get('room_name', None)
+        queryset = Message.objects.all()
+        if room_name:
+            queryset = queryset.filter(room_name=room_name)
+        return queryset
 
     def list(self, request, *args, **kwargs):
         logger.debug(
@@ -82,6 +107,6 @@ class MessageViewSet(viewsets.ModelViewSet):
     def perform_create(self, serializer):
         logger.debug(
             "🐛 MessageViewSet.perform_create called, user=%s",
-            request.user
+            self.request.user
         )
-        serializer.save(user=request.user)
+        serializer.save(user=self.request.user)

@@ -85,7 +85,19 @@ REST_FRAMEWORK = {
     'DEFAULT_PERMISSION_CLASSES': [
         'rest_framework.permissions.IsAuthenticated',
     ],
+    # Add this to prevent unauthorized access
+    'UNAUTHENTICATED_USER': None,
 }
+
+# Add these authentication settings
+AUTHENTICATION_BACKENDS = [
+    'django.contrib.auth.backends.ModelBackend',
+]
+
+# Strengthen session security
+SESSION_ENGINE = 'django.contrib.sessions.backends.db'
+SESSION_COOKIE_AGE = 86400  # 24 hours in seconds
+SESSION_EXPIRE_AT_BROWSER_CLOSE = True
 
 # Core session settings
 SESSION_COOKIE_HTTPONLY = True
@@ -106,6 +118,10 @@ CORS_ALLOWED_ORIGINS = [
 ]
 
 LOGIN_REDIRECT_URL = '/api/events/'
+
+# Add these settings for authentication
+LOGIN_URL = '/api-auth/login/'  # Change from default 'accounts/login/'
+LOGOUT_REDIRECT_URL = '/api-auth/login/'
 
 # ──────────────────────────────────────────────────────────────────────────
 # CSRF (Trust your front-end + your own back-end origins)

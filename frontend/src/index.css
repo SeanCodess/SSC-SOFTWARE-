@@ -1,0 +1,75 @@
+:root {
+  /* Base palette */
+  --color-bg:       #ffffff;   /* white */
+  --color-primary:  #0d6efd;   /* bold blue */
+  --color-accent:   #ffc107;   /* vibrant yellow */
+  --color-text:     #212529;   /* dark grey for readability */
+
+  /* Tile shadows & rounding */
+  --tile-radius:    12px;
+  --tile-shadow:    0 2px 8px rgba(0,0,0,0.1);
+}
+
+/* Global reset/background */
+body {
+  margin: 0;
+  font-family: 'Segoe UI', Roboto, sans-serif;
+  background-color: var(--color-bg);
+  color: var(--color-text);
+}
+
+/* Utility container for dashboard sections */
+.container {
+  max-width: 1200px;
+  margin: 1.5rem auto;
+  padding: 0 1rem;
+}
+
+/* Header row */
+.dashboard-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.dashboard-header h1 {
+  /* remove the old margin:0; */
+  margin: 0 auto;            /* auto left/right margins center it in a flex row */
+  text-align: center;        /* just in case it ever wraps */
+  width: max-content;        /* shrink to exactly the title’s width */
+  padding: 0 clamp(1rem, 5vw, 2rem); /* optional breathing room on very small screens */
+}
+
+/* Tile base style */
+.tile {
+  border-radius: var(--tile-radius);
+  box-shadow: var(--tile-shadow);
+  padding: 1.25rem;
+  margin-bottom: 1.5rem;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.tile:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 4px 16px rgba(0,0,0,0.15);
+}
+
+/* Blue / yellow variants */
+.tile.blue {
+  background-color: var(--color-primary);
+  color: #fff;
+}
+
+.tile.yellow {
+  background-color: var(--color-accent);
+  color: #212529;
+}
+
+/* Minimalist separators */
+.hr {
+  border: none;
+  height: 1px;
+  background-color: rgba(0,0,0,0.1);
+  margin: 2rem 0;
+}

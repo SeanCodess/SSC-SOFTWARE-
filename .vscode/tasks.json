@@ -1,0 +1,19 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+      {
+        "label": "Run Django Server",
+        "type": "shell",
+        "command": "cd backend; .\\venv\\Scripts\\Activate.ps1; python manage.py runserver",
+        "presentation": {
+          "panel": "dedicated"
+        }
+      },
+      {
+        "label": "Start Celery Worker",
+        "type": "shell",
+        "command": "cd backend && source venv/bin/activate && celery -A backend worker -l info"
+      }
+    ]
+  }
+  

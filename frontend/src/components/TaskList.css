@@ -1,0 +1,81 @@
+.task-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.task-list h2 {
+  margin: 0;
+  color: var(--color-primary);
+}
+
+.loading {
+  font-style: italic;
+  color: #555;
+}
+
+/* grid of task cards */
+.task-grid {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: grid;
+  gap: 1rem;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+}
+
+/* each task card */
+.task-item {
+  background-color: #fff8e1; /* pale yellow tile */
+  border-radius: 8px;
+  padding: 1rem;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  transition: opacity 0.2s;
+}
+
+.task-item.completed {
+  opacity: 0.6;
+  text-decoration: line-through;
+}
+
+/* label + checkbox row */
+.task-label {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  gap: 0.5rem;
+}
+
+.task-label input {
+  transform: scale(1.1);
+}
+
+/* title text */
+.task-title {
+  font-weight: 500;
+  margin: 0 0 0.5rem;
+  color: var(--color-primary);
+}
+
+/* meta info */
+.task-meta {
+  font-size: 0.9rem;
+  color: #666;
+  margin: 0.5rem 0;
+}
+
+/* optional description */
+.task-desc {
+  margin: 0.5rem 0 0;
+  font-size: 0.9rem;
+  color: #444;
+}
+
+@media (max-width: 500px) {
+  .task-grid {
+    grid-template-columns: 1fr;
+  }
+}
